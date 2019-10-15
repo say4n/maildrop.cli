@@ -55,7 +55,7 @@ func main() {
 		{
 			Name:    "view",
 			Aliases: []string{"v"},
-			Usage:   "list emails from inbox",
+			Usage:   "read email from inbox",
 			Action:  maildrop.FetchEmail,
 			Flags: []cli.Flag{
 				cli.StringFlag{
