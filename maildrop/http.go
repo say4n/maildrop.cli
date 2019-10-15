@@ -41,7 +41,7 @@ func createGetRequest(url string) (*http.Request, error) {
 	return req, err
 }
 
-func doGetRequest(url string) []byte {
+func doGetRequest(url string) ([]byte, int) {
 	req, err := createGetRequest(url)
 	if err != nil {
 		Logger.Fatal(err)
@@ -58,5 +58,5 @@ func doGetRequest(url string) []byte {
 		Logger.Fatal(err)
 	}
 
-	return body
+	return body, res.StatusCode
 }

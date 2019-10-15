@@ -3,6 +3,7 @@ package maildrop
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
 type Inbox struct {
@@ -22,7 +23,10 @@ func fetchInbox(inbox string) Inbox {
 	queryUrl := fmt.Sprintf("%s/mailbox/%s", baseurl, inbox)
 	Logger.Println("fetchInbox:queryUrl:", queryUrl)
 
-	body := doGetRequest(queryUrl)
+	body, status := doGetRequest(queryUrl)
+	if status != http.StatusOK {
+		Logger.Fatal("fetchInbox:", http.StatusText(status))
+	}
 
 	mInbox := Inbox{}
 	err := json.Unmarshal(body, &mInbox)
