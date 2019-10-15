@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 
@@ -48,8 +49,22 @@ func FetchInbox(c *cli.Context) error {
 	if len(c.Args()) == 0 {
 		logger.Fatal("FetchInbox.error: cannot list emails without inbox name")
 	}
-	queryUrl := fmt.Sprintf("%s/%s/%s", baseurl, "mailbox", c.Args().First())
-	logger.Println("FetchInbox:queryUrl:", queryUrl)
+
+	mInbox := fetchInbox(c.Args().First(), logger)
+
+	fmt.Printf("Alias Address: %s@maildrop.cc\n", au.Bold(mInbox.AltInbox))
+	fmt.Printf("Email(s) for %s@maildrop.cc:\n", au.BrightBlue(c.Args().First()))
+
+	for _, msg := range mInbox.Messages {
+		fmt.Printf("[%s]\t%s by %s\n", au.Bold(msg.Id), msg.Subject, msg.From)
+	}
+
+	return nil
+}
+
+func fetchInbox(inbox string, logger *log.Logger) Inbox {
+	queryUrl := fmt.Sprintf("%s/%s/%s", baseurl, "mailbox", inbox)
+	logger.Println("fetchInbox:queryUrl:", queryUrl)
 
 	client := http.Client{
 		Timeout: time.Second * 2,
@@ -76,14 +91,7 @@ func FetchInbox(c *cli.Context) error {
 		logger.Fatal(err)
 	}
 
-	fmt.Printf("Alias Address: %s@maildrop.cc\n", au.Bold(mInbox.AltInbox))
-	fmt.Printf("Email(s) for %s@maildrop.cc:\n", au.BrightBlue(c.Args().First()))
-
-	for _, msg := range mInbox.Messages {
-		fmt.Printf("[%s]\t%s by %s\n", au.Bold(msg.Id), msg.Subject, msg.From)
-	}
-
-	return nil
+	return mInbox
 }
 
 func FetchEmail(c *cli.Context) error {
