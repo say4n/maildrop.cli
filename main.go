@@ -12,6 +12,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "maildrop"
 	app.Usage = "an unofficial cli client to maildrop.cc"
+	app.Version = "v1"
 
 	logger := maildrop.GetLoggerInstance()
 
