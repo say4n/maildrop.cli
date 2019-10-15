@@ -38,18 +38,49 @@ func main() {
 			Aliases: []string{"i"},
 			Usage:   "show emails in inbox",
 			Action:  maildrop.FetchInbox,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:     "address, a",
+					Usage:    "mailbox address",
+					Required: true,
+				},
+			},
 		},
 		{
 			Name:    "view",
 			Aliases: []string{"v"},
 			Usage:   "list emails from inbox",
 			Action:  maildrop.FetchEmail,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:     "address, a",
+					Usage:    "mailbox address",
+					Required: true,
+				},
+				cli.StringFlag{
+					Name:     "uid, u",
+					Usage:    "unique ID of the email",
+					Required: true,
+				},
+			},
 		},
 		{
 			Name:    "delete",
 			Aliases: []string{"d"},
 			Usage:   "delete email from inbox",
 			Action:  maildrop.DeleteEmail,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:     "address, a",
+					Usage:    "mailbox address",
+					Required: true,
+				},
+				cli.StringFlag{
+					Name:     "uid, u",
+					Usage:    "unique ID of the email",
+					Required: true,
+				},
+			},
 		},
 	}
 

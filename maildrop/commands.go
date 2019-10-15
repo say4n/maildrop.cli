@@ -13,11 +13,8 @@ import (
 const baseurl = "https://api.maildrop.cc/v2"
 
 func FetchInbox(c *cli.Context) error {
-	if len(c.Args()) == 0 {
-		Logger.Fatal("FetchInbox.error: cannot list emails without inbox name")
-	}
-
-	mInbox := fetchInbox(c.Args().First())
+	address := c.String("address")
+	mInbox := fetchInbox(address)
 
 	fmt.Printf("Alias Address: %s@maildrop.cc\n", au.Bold(mInbox.AltInbox))
 	fmt.Printf("Email(s) for %s@maildrop.cc:\n", au.BrightBlue(c.Args().First()))
@@ -39,12 +36,8 @@ func FetchInbox(c *cli.Context) error {
 }
 
 func FetchEmail(c *cli.Context) error {
-	if len(c.Args()) < 2 {
-		Logger.Fatal("FetchEmail.error: cannot show email without inbox name and email uid")
-	}
-
-	inbox := c.Args()[0]
-	email_uid := c.Args()[1]
+	inbox := c.String("address")
+	email_uid := c.String("uid")
 	Logger.Printf("inbox: %s, email: %s", inbox, email_uid)
 
 	mEmail := fetchEmail(inbox, email_uid)
@@ -58,12 +51,8 @@ func FetchEmail(c *cli.Context) error {
 }
 
 func DeleteEmail(c *cli.Context) error {
-	if len(c.Args()) < 2 {
-		Logger.Fatal("FetchEmail.error: cannot delete email without inbox name and email uid")
-	}
-
-	inbox := c.Args()[0]
-	email_uid := c.Args()[1]
+	inbox := c.String("address")
+	email_uid := c.String("uid")
 	Logger.Printf("inbox: %s, email: %s", inbox, email_uid)
 
 	deleteEmail(inbox, email_uid)
