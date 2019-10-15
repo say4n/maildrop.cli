@@ -3,8 +3,10 @@ package maildrop
 import (
 	"fmt"
 	_ "log"
+	"os"
 
 	au "github.com/logrusorgru/aurora"
+	"github.com/olekukonko/tablewriter"
 	"github.com/urfave/cli"
 )
 
@@ -20,9 +22,18 @@ func FetchInbox(c *cli.Context) error {
 	fmt.Printf("Alias Address: %s@maildrop.cc\n", au.Bold(mInbox.AltInbox))
 	fmt.Printf("Email(s) for %s@maildrop.cc:\n", au.BrightBlue(c.Args().First()))
 
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Email UID", "Subject"})
+	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+	table.SetCenterSeparator("|")
+
 	for _, msg := range mInbox.Messages {
-		fmt.Printf("[%s]\t%s by %s\n", au.Bold(msg.Id), msg.Subject, msg.From)
+		uid := fmt.Sprintf("%s", au.Bold(msg.Id))
+		text := fmt.Sprintf("%s by %s", msg.Subject, msg.From)
+		table.Append([]string{uid, text})
 	}
+
+	table.Render()
 
 	return nil
 }
