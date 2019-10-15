@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/say4n/maildrop.cli/commands"
+	"github.com/say4n/maildrop.cli/maildrop"
 	"github.com/urfave/cli"
 )
 
@@ -13,7 +13,7 @@ func main() {
 	app.Name = "maildrop"
 	app.Usage = "an unofficial cli client to maildrop.cc"
 
-	logger := commands.GetLoggerInstance()
+	logger := maildrop.GetLoggerInstance()
 
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
@@ -36,13 +36,13 @@ func main() {
 			Name:    "inbox",
 			Aliases: []string{"i"},
 			Usage:   "show emails in inbox",
-			Action:  commands.FetchInbox,
+			Action:  maildrop.FetchInbox,
 		},
 		{
 			Name:    "view",
 			Aliases: []string{"v"},
 			Usage:   "list emails from inbox",
-			Action:  commands.FetchEmail,
+			Action:  maildrop.FetchEmail,
 		},
 	}
 

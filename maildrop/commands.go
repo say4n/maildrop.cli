@@ -1,4 +1,4 @@
-package commands
+package maildrop
 
 import (
 	"encoding/json"
