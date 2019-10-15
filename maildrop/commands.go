@@ -42,7 +42,17 @@ func FetchEmail(c *cli.Context) error {
 	if len(c.Args()) < 2 {
 		Logger.Fatal("FetchEmail.error: cannot show email without inbox name and email uid")
 	}
-	Logger.Printf("inbox: %s, email: %s", c.Args()[0], c.Args()[1])
+
+	inbox := c.Args()[0]
+	email_uid := c.Args()[1]
+	Logger.Printf("inbox: %s, email: %s", inbox, email_uid)
+
+	mEmail := fetchEmail(inbox, email_uid)
+
+	fmt.Printf("%s: %s\n", au.Bold("subject"), mEmail.Subject)
+	fmt.Printf("%s: %s\n", au.Bold("from"), mEmail.From)
+	fmt.Printf("%s: %s\n", au.Bold("date"), mEmail.ParsedDate)
+	fmt.Printf("%s:\n%s\n", au.Bold("message"), mEmail.Plaintext)
 
 	return nil
 }
