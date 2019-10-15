@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	Version string
-	Build   string
+	Version string = "1"
+	Build   string = "release"
 )
 
 func main() {

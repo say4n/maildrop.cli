@@ -1,6 +1,11 @@
 # maildrop.cli
 an unofficial cli client for maildrop.cc
 
+
+### install
+
+install `maildrop.cli` with `go get github.com/say4n/maildrop.cli`
+
 ### usage
 
 ```bash
