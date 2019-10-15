@@ -44,6 +44,12 @@ func main() {
 			Usage:   "list emails from inbox",
 			Action:  maildrop.FetchEmail,
 		},
+		{
+			Name:    "delete",
+			Aliases: []string{"d"},
+			Usage:   "delete email from inbox",
+			Action:  maildrop.DeleteEmail,
+		},
 	}
 
 	// if

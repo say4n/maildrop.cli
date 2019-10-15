@@ -56,3 +56,17 @@ func FetchEmail(c *cli.Context) error {
 
 	return nil
 }
+
+func DeleteEmail(c *cli.Context) error {
+	if len(c.Args()) < 2 {
+		Logger.Fatal("FetchEmail.error: cannot delete email without inbox name and email uid")
+	}
+
+	inbox := c.Args()[0]
+	email_uid := c.Args()[1]
+	Logger.Printf("inbox: %s, email: %s", inbox, email_uid)
+
+	deleteEmail(inbox, email_uid)
+
+	return nil
+}

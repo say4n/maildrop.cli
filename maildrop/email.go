@@ -50,3 +50,14 @@ func fetchEmail(inbox, email_uid string) Email {
 
 	return mEmail
 }
+
+func deleteEmail(inbox, email_uid string) {
+	queryUrl := fmt.Sprintf("%s/mailbox/%s/%s", baseurl, inbox, email_uid)
+	referer := fmt.Sprintf("%s/mailbox/%s", baseurl, inbox)
+	Logger.Println("deleteEmail:queryUrl:", queryUrl)
+
+	status := doDeleteRequest(queryUrl, referer)
+	if status != http.StatusOK {
+		Logger.Fatal("deleteEmail:", http.StatusText(status))
+	}
+}

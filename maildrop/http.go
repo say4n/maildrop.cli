@@ -41,6 +41,19 @@ func createGetRequest(url string) (*http.Request, error) {
 	return req, err
 }
 
+func createDeleteRequest(url, referer string) (*http.Request, error) {
+	req, err := http.NewRequest(http.MethodDelete, url, nil)
+	if err != nil {
+		Logger.Fatal(err)
+	}
+
+	req.Header.Set("User-Agent", user_agent)
+	req.Header.Set("x-api-key", x_api_key)
+	req.Header.Set("Referer", referer)
+
+	return req, err
+}
+
 func doGetRequest(url string) ([]byte, int) {
 	req, err := createGetRequest(url)
 	if err != nil {
@@ -59,4 +72,19 @@ func doGetRequest(url string) ([]byte, int) {
 	}
 
 	return body, res.StatusCode
+}
+
+func doDeleteRequest(url, referer string) int {
+	req, err := createDeleteRequest(url, referer)
+	if err != nil {
+		Logger.Fatal(err)
+	}
+
+	client := getHTTPClient()
+	res, err := client.Do(req)
+	if err != nil {
+		Logger.Fatal(err)
+	}
+
+	return res.StatusCode
 }
