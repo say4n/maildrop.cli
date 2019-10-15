@@ -3,8 +3,6 @@ package maildrop
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
 )
 
 type Inbox struct {
@@ -20,30 +18,16 @@ type Message struct {
 	Date    string `json:"date"`
 }
 
-func fetchInbox(inbox string, logger *log.Logger) Inbox {
+func fetchInbox(inbox string) Inbox {
 	queryUrl := fmt.Sprintf("%s/mailbox/%s", baseurl, inbox)
-	logger.Println("fetchInbox:queryUrl:", queryUrl)
+	Logger.Println("fetchInbox:queryUrl:", queryUrl)
 
-	req, err := createGetRequest(queryUrl)
-	if err != nil {
-		logger.Fatal(err)
-	}
-
-	client := getHTTPClient()
-	res, err := client.Do(req)
-	if err != nil {
-		logger.Fatal(err)
-	}
-
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		logger.Fatal(err)
-	}
+	body := doGetRequest(queryUrl)
 
 	mInbox := Inbox{}
-	err = json.Unmarshal(body, &mInbox)
+	err := json.Unmarshal(body, &mInbox)
 	if err != nil {
-		logger.Fatal(err)
+		Logger.Fatal(err)
 	}
 
 	return mInbox

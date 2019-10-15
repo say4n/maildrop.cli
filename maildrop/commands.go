@@ -11,12 +11,11 @@ import (
 const baseurl = "https://api.maildrop.cc/v2"
 
 func FetchInbox(c *cli.Context) error {
-	logger := GetLoggerInstance()
 	if len(c.Args()) == 0 {
-		logger.Fatal("FetchInbox.error: cannot list emails without inbox name")
+		Logger.Fatal("FetchInbox.error: cannot list emails without inbox name")
 	}
 
-	mInbox := fetchInbox(c.Args().First(), logger)
+	mInbox := fetchInbox(c.Args().First())
 
 	fmt.Printf("Alias Address: %s@maildrop.cc\n", au.Bold(mInbox.AltInbox))
 	fmt.Printf("Email(s) for %s@maildrop.cc:\n", au.BrightBlue(c.Args().First()))
@@ -29,11 +28,10 @@ func FetchInbox(c *cli.Context) error {
 }
 
 func FetchEmail(c *cli.Context) error {
-	logger := GetLoggerInstance()
 	if len(c.Args()) < 2 {
-		logger.Fatal("FetchEmail.error: cannot show email without inbox name and email uid")
+		Logger.Fatal("FetchEmail.error: cannot show email without inbox name and email uid")
 	}
-	logger.Printf("inbox: %s, email: %s", c.Args()[0], c.Args()[1])
+	Logger.Printf("inbox: %s, email: %s", c.Args()[0], c.Args()[1])
 
 	return nil
 }
