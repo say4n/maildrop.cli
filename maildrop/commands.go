@@ -5,18 +5,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"net/http"
-	"time"
 
 	au "github.com/logrusorgru/aurora"
 	"github.com/urfave/cli"
 )
 
-const (
-	baseurl    = "https://api.maildrop.cc/v2"
-	user_agent = "maildrop_cli"
-	x_api_key  = "QM8VTHrLR2JloKTJMZ3N6Qa93FVsx8LapKCzEjui"
-)
+const baseurl = "https://api.maildrop.cc/v2"
 
 type Inbox struct {
 	AltInbox string    `json:"altinbox"`
@@ -29,19 +23,6 @@ type Message struct {
 	To      string `json:"to"`
 	Subject string `json:"subject"`
 	Date    string `json:"date"`
-}
-
-func createGetRequest(url string) (*http.Request, error) {
-	logger := GetLoggerInstance()
-	req, err := http.NewRequest(http.MethodGet, url, nil)
-	if err != nil {
-		logger.Fatal(err)
-	}
-
-	req.Header.Set("User-Agent", user_agent)
-	req.Header.Set("x-api-key", x_api_key)
-
-	return req, err
 }
 
 func FetchInbox(c *cli.Context) error {
@@ -63,18 +44,15 @@ func FetchInbox(c *cli.Context) error {
 }
 
 func fetchInbox(inbox string, logger *log.Logger) Inbox {
-	queryUrl := fmt.Sprintf("%s/%s/%s", baseurl, "mailbox", inbox)
+	queryUrl := fmt.Sprintf("%s/mailbox/%s", baseurl, inbox)
 	logger.Println("fetchInbox:queryUrl:", queryUrl)
-
-	client := http.Client{
-		Timeout: time.Second * 2,
-	}
 
 	req, err := createGetRequest(queryUrl)
 	if err != nil {
 		logger.Fatal(err)
 	}
 
+	client := getHTTPClient()
 	res, err := client.Do(req)
 	if err != nil {
 		logger.Fatal(err)
