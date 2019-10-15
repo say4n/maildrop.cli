@@ -25,7 +25,7 @@ func getHTTPClient() *http.Client {
 
 func createHTTPClient() *http.Client {
 	return &http.Client{
-		Timeout: time.Second * 2,
+		Timeout: time.Second * 5,
 	}
 }
 
