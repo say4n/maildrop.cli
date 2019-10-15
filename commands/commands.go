@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 
@@ -32,9 +31,10 @@ type Message struct {
 }
 
 func createGetRequest(url string) (*http.Request, error) {
+	logger := GetLoggerInstance()
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
 	req.Header.Set("User-Agent", user_agent)
@@ -44,11 +44,12 @@ func createGetRequest(url string) (*http.Request, error) {
 }
 
 func FetchInbox(c *cli.Context) error {
+	logger := GetLoggerInstance()
 	if len(c.Args()) == 0 {
-		log.Fatal("maildrop.cli.FetchInbox.error: cannot list emails without inbox name")
+		logger.Fatal("FetchInbox.error: cannot list emails without inbox name")
 	}
 	queryUrl := fmt.Sprintf("%s/%s/%s", baseurl, "mailbox", c.Args().First())
-	log.Println("maildrop.cli.FetchInbox:queryUrl:", queryUrl)
+	logger.Println("FetchInbox:queryUrl:", queryUrl)
 
 	client := http.Client{
 		Timeout: time.Second * 2,
@@ -56,23 +57,23 @@ func FetchInbox(c *cli.Context) error {
 
 	req, err := createGetRequest(queryUrl)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
 	res, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
 	mInbox := Inbox{}
 	err = json.Unmarshal(body, &mInbox)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
 	fmt.Printf("Alias Address: %s@maildrop.cc\n", au.Bold(mInbox.AltInbox))
@@ -86,10 +87,11 @@ func FetchInbox(c *cli.Context) error {
 }
 
 func FetchEmail(c *cli.Context) error {
+	logger := GetLoggerInstance()
 	if len(c.Args()) < 2 {
-		log.Fatal("maildrop.cli.FetchEmail.error: cannot show email without inbox name and email uid")
+		logger.Fatal("FetchEmail.error: cannot show email without inbox name and email uid")
 	}
-	log.Printf("inbox: %s, email: %s", c.Args()[0], c.Args()[1])
+	logger.Printf("inbox: %s, email: %s", c.Args()[0], c.Args()[1])
 
 	return nil
 }

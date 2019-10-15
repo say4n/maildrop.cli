@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"io/ioutil"
 	"os"
 
 	"github.com/say4n/maildrop.cli/commands"
@@ -12,6 +12,24 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "maildrop"
 	app.Usage = "an unofficial cli client to maildrop.cc"
+
+	logger := commands.GetLoggerInstance()
+
+	app.Flags = []cli.Flag{
+		cli.BoolFlag{
+			Name:  "logging, l",
+			Usage: "enable logging",
+		},
+	}
+
+	app.Before = func(c *cli.Context) error {
+		if !c.Bool("logging") {
+			logger.SetFlags(0)
+			logger.SetOutput(ioutil.Discard)
+		}
+
+		return nil
+	}
 
 	app.Commands = []cli.Command{
 		{
@@ -28,8 +46,10 @@ func main() {
 		},
 	}
 
+	// if
+
 	err := app.Run(os.Args)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 }
